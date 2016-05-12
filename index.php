@@ -63,7 +63,7 @@ if(!isset($video)){
 }
 
 // Count Videos
-if(count($video->items)>0) {
+if(count($video['items'])>0) {
 	//Schleife durch $video Array beginnend bei items
 	foreach($video['items'] as $video_data) {
 		if($video_data['snippet']['title'] != "Private video"){
