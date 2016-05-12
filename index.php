@@ -23,7 +23,7 @@ $apiRequest = getdata('https://www.googleapis.com/youtube/v3/playlists?'
 $playlist = json_decode($apiRequest, true);
 
 // DIE if $video is empty
-if(!isset($playlist)){
+if(!isset($playlist) OR !$playlistId){
 	die('Could not load Playlist');
 }
 
@@ -62,30 +62,35 @@ if(!isset($video)){
 	die('No Video Data available');
 }
 
-//Schleife durch $video Array beginnend bei items
-foreach($video['items'] as $video_data) {
-	echo 	'<item>' . "\n"
-				. '<title>' . $video_data['snippet']['title'] .'</title>' . "\n"
-				. '<link>https://www.youtube.com/watch?v=' 
-					. $video_data['snippet']['resourceId']['videoId'] 
-				. '</link>' . "\n"
-				. '<description><![CDATA[' 
-					. '<img src="' . $video_data['snippet']['thumbnails']['medium']['url'] . '" '
-						. 'alt="' . $video_data['snippet']['title'] . '" '
-						. 'width="'. $video_data['snippet']['thumbnails']['medium']['width'] . '" '
-						. 'height="' . $video_data['snippet']['thumbnails']['medium']['height'] . '" '
-						. '/>' 
-					. '<br />' 
-					. $video_data['snippet']['description'] 
-				. ']]></description>' . "\n"
-				. '<guid>https://www.youtube.com/watch?v=' 
-					. $video_data['snippet']['resourceId']['videoId'] 
-				. '</guid>' . "\n"
-				. '<pubDate>' 
-					. date(DATE_RFC2822, strtotime($video_data['snippet']['publishedAt']))
-				. '</pubDate>' . "\n"
-			. '</item>' . "\n"; 
-} // Ende Foreach Schleife
+// Count Videos
+if(count($video->items)>0) {
+	//Schleife durch $video Array beginnend bei items
+	foreach($video['items'] as $video_data) {
+		if($video_data['snippet']['title'] != "Private video"){
+			echo '<item>' . "\n"
+					. '<title>' . $video_data['snippet']['title'] .'</title>' . "\n"
+					. '<link>https://www.youtube.com/watch?v=' 
+						. $video_data['snippet']['resourceId']['videoId'] 
+					. '</link>' . "\n"
+					. '<description><![CDATA[' 
+						. '<img src="' . $video_data['snippet']['thumbnails']['medium']['url'] . '" '
+							. 'alt="' . $video_data['snippet']['title'] . '" '
+							. 'width="'. $video_data['snippet']['thumbnails']['medium']['width'] . '" '
+							. 'height="' . $video_data['snippet']['thumbnails']['medium']['height'] . '" '
+							. '/>' 
+						. '<br />' 
+						. $video_data['snippet']['description'] 
+					. ']]></description>' . "\n"
+					. '<guid>https://www.youtube.com/watch?v=' 
+						. $video_data['snippet']['resourceId']['videoId'] 
+					. '</guid>' . "\n"
+					. '<pubDate>' 
+						. date(DATE_RFC2822, strtotime($video_data['snippet']['publishedAt']))
+					. '</pubDate>' . "\n"
+				. '</item>' . "\n"; 
+		}
+	} // Ende Foreach Schleife
+} // End Count Videos
 
 // RSS schließen
 echo '</channel>' . "\n"
