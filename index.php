@@ -83,7 +83,7 @@ if($apiKey == '') {
 						. $video_data['snippet']['resourceId']['videoId']
 					. '</guid>' . "\n"
 					. '<pubdate>' 
-						. $video_data['snippet']['publishedAt']
+						. date('r', strtotime($video_data['snippet']['publishedAt']))
 					. '</pubdate>' . "\n"
 				. '</item>' . "\n";
 	} // Ende Foreach Schleife
@@ -160,7 +160,7 @@ if($apiKey == '') {
 						. $video_data['id']['videoId']
 					. '</guid>' . "\n"
 					. '<pubdate>' 
-						. $video_data['snippet']['publishedAt']
+						. date('r', strtotime($video_data['snippet']['publishedAt']))
 					. '</pubdate>' . "\n"
 				. '</item>' . "\n";
 	} // Ende Foreach Schleife
