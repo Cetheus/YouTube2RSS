@@ -5,7 +5,15 @@ $apiKey = '';
 // Define Variables
 $playlistId = '';
 $channelId = '';
-$maxChannelResults = 20; //Default number of Items requested
+$maxResults = 20; //Default number of Items requested
+
+if (isset($_GET["maxresults"])){
+	$maxResults = $_GET["maxresults"];
+
+	if ($maxResults > 50) {
+		$maxResults = 50;
+	}
+}
 
 if($apiKey == '') {
 	die('Please configure the API-Key');
@@ -52,7 +60,7 @@ if($apiKey == '') {
 	$apiRequest = getdata('https://www.googleapis.com/youtube/v3/playlistItems?'
 			. 'part=snippet'
 			. '&playlistId=' . $playlistId
-			. '&maxResults=10'
+			. '&maxResults=' . $maxResults
 			. '&fields=items%2Fsnippet'
 			. '&key=' . $apiKey);
 
@@ -74,6 +82,9 @@ if($apiKey == '') {
 					. '<guid>https://www.youtube.com/watch?v='
 						. $video_data['snippet']['resourceId']['videoId']
 					. '</guid>' . "\n"
+					. '<pubdate>' 
+						. $video_data['snippet']['publishedAt']
+					. '</pubdate>' . "\n"
 				. '</item>' . "\n";
 	} // Ende Foreach Schleife
 
@@ -82,13 +93,6 @@ if($apiKey == '') {
 		. '</rss>';
 
 } else if (isset($_GET["channelid"])) {
-	if (isset($_GET["maxchannelresults"])){
-		$maxChannelResults = $_GET["maxchannelresults"];
-		
-		if ($maxChannelResults > 50) {
-			$maxChannelResults = 50;
-		}
-	}
 	$channelId = $_GET["channelid"];
 
 	// API Request for Chanel Properties
@@ -131,7 +135,7 @@ if($apiKey == '') {
 	$apiRequest = getdata('https://www.googleapis.com/youtube/v3/search?'
 			. 'part=snippet,id'
 			. '&order=date'
-			. '&maxResults=' . $maxChannelResults
+			. '&maxResults=' . $maxResults
 			. '&channelId=' . $channelId
 			. '&key=' . $apiKey);
 
@@ -149,10 +153,15 @@ if($apiKey == '') {
 					. '<link>https://www.youtube.com/watch?v='
 						. $video_data['id']['videoId']
 					. '</link>' . "\n"
-					. '<description>' . $video_data['snippet']['description'] .'</description>' . "\n"
+					. '<description>' 
+						. $video_data['snippet']['description'] 
+					.'</description>' . "\n"
 					. '<guid>https://www.youtube.com/watch?v='
 						. $video_data['id']['videoId']
 					. '</guid>' . "\n"
+					. '<pubdate>' 
+						. $video_data['snippet']['publishedAt']
+					. '</pubdate>' . "\n"
 				. '</item>' . "\n";
 	} // Ende Foreach Schleife
 
